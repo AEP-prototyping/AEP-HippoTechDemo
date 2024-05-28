@@ -31,8 +31,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - name: Checkout Source
-      uses: actions/checkout@v4
-    - name: Setup 
+      # uses: actions/checkout@v4
+    # - name: Setup 
         ### SLS copied in section until -glean git  from ci.yml to get build 
       - uses: actions/checkout@v3
       
