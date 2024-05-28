@@ -35,15 +35,37 @@ jobs:
     - name: Setup Java JDK
       uses: actions/setup-java@v4
       with:
-        java-version: 17
-        distribution: microsoft
-        cache: maven
+        ### SLS copied in section until -glean git  from ci.yml to get build 
+          node-version: 16
+          cache: 'npm'
+          cache-dependency-path: jest/package-lock.json
+
+      - name: Set up JDK 11
+        uses: actions/setup-java@v3
+        with:
+          java-version: '11'
+          distribution: 'adopt'
+      
+      - name: Cache Maven packages
+        uses: actions/cache@v3
+        with:
+          path: ~/.m2
+          key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
+          restore-keys: ${{ runner.os }}-m2
+
+      - name: Build with Maven
+        working-directory: ./java-api
+        run: mvn -DskipTests=true package
+        
+        # java-version: 17
+        # distribution: microsoft
+        # cache: maven
     # - name: clean git
       # run: rm -r .git/config
-    - name: Maven Build
-      run: mvn -B -DskipTests package
-    - name: Clean Git
-      run: rm -r .git/config
+    # - name: Maven Build
+      # run: mvn -B -DskipTests package
+    # - name: Clean Git
+      # run: rm -r .git/config
     - name: Black Duck Full Scan
       if: ${{ github.event_name != 'pull_request' }}
       uses: synopsys-sig/synopsys-action@v1.9.0
